@@ -142,6 +142,19 @@
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+
+    // each, apply iterator on collection values, and return new array
+    // new results array
+    // each loop, push to the result array iterator(value)
+    // return results array
+    var results = [];
+
+    _.each(collection, function(item) {
+      results.push(iterator(item));
+    });
+
+    return results;
+
   };
 
   /*
@@ -183,6 +196,64 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    // collection: [1,2,3]
+    // iterator: function(total, number) { return  };
+    // accumulator = 0
+    // 0 + 1 = 1
+    // 1 + 2 = 3
+    // 3 + 3 = 6
+    // 6
+
+    // each on collection
+    // starting value = accumulator || first value of collection if undefined
+    // iterator on the accumulator and the item from collection
+    // store the output which should be the accumulator
+    // assume collection length greater than zero (edge case)
+
+    // Input: collection, iterator, acc
+    // Output: value reduce
+    if (accumulator === undefined) {
+      if (Array.isArray(collection)) {
+        accumulator = collection[0];
+        var collectionCopy = collection.slice(1);
+
+      } else {
+        // object
+        var keys = Object.keys(collection);
+        accumulator = collection[keys[0]];
+        var collectionCopy = structuredClone(collection);
+        delete collectionCopy[keys[0]];
+      }
+    } else {
+      collectionCopy = collection;
+    }
+    _.each(collectionCopy, function(item) {
+      accumulator = iterator(accumulator, item);
+    });
+
+    return accumulator;
+
+
+    // if (accumulator) {
+    //   _.each(collection, function(item) {
+    //     accumulator = iterator(accumulator, item);
+    //   });
+    // } else {
+    //   // check if array or object
+    //   if (Array.isArray(collection)) {
+    //     accumulator = collection.shift();
+    //   } else {
+    //     // object
+    //     var keys = Object.keys(collection);
+    //     accumulator = collection[keys[0]];
+    //     delete collection[keys[0]];
+    //   }
+    // }
+
+
+    // if use accumulator
+    // else skip first collection and continue
+
   };
 
   // Determine if the array or object contains a given value (using `===`).
